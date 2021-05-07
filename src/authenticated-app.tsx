@@ -21,7 +21,7 @@ export const AuthenticatedApp = () => {
   return <Container>
     <div>
       <div>
-        {value.name}
+        {value?.name || ''}
       </div>
     </div>
     <Header between={true}>

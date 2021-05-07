@@ -4,12 +4,19 @@ import { LoginScreen } from "./../unauthenticated-app/login";
 import { RegisterScreen } from "./../unauthenticated-app/register";
 import styled from '@emotion/styled'
 import logo from '../assets/logo.svg'
+import {Helmet} from 'react-helmet';
+import { useDocumentTitle } from "../utils";
 
 export const UnauthenticatedApp = () => {
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  // useDocumentTitle('请登录或注册继续')
+
   return (
     <Container>
+      {/* <Helmet>
+        <title>请登录或注册继续</title>
+      </Helmet> */}
       <Header></Header>
       <Button onClick={() => {
         throw new Error('点击抛出一个异常')
