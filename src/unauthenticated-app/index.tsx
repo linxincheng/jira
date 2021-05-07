@@ -4,7 +4,7 @@ import { LoginScreen } from "./../unauthenticated-app/login";
 import { RegisterScreen } from "./../unauthenticated-app/register";
 import styled from '@emotion/styled'
 import logo from '../assets/logo.svg'
-import {Helmet} from 'react-helmet';
+// import {Helmet} from 'react-helmet';
 import { useDocumentTitle } from "../utils";
 
 export const UnauthenticatedApp = () => {

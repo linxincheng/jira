@@ -1,5 +1,5 @@
 // 手写异常边界
-import React, { ReactNode } from 'react';
+import React from 'react';
 
 // children
 // fallbackRender
