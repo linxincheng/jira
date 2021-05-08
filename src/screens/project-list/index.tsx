@@ -6,7 +6,7 @@ import { Typography } from 'antd'
 import { useProjects } from '../../utils/project'; 
 import { useUsers } from '../../utils/user'
 // import { Test } from './test'
-import { useUrlQueryParam } from '../../utils/url'
+// import { useUrlQueryParam } from '../../utils/url'
 import { useProjectSearchParams } from './util'
 export const ProjectListScreen = () => {
   useDocumentTitle('项目列表', false);
@@ -16,7 +16,7 @@ export const ProjectListScreen = () => {
   const {isLoading, error, data: list, retry} = useProjects(useDebounce(param, 200));
   const {data:users} = useUsers();
 
-  const test = useUrlQueryParam(['name'])
+  // const test = useUrlQueryParam(['name'])
   console.log(retry);
 
   return <Container>

@@ -7,7 +7,7 @@ import { ProjectListScreen } from './screens/project-list';
 import {ReactComponent as Logo} from './assets/logo.svg'
 import { Button, Dropdown, Menu } from 'antd';
 import {Navigate, Route, Routes} from 'react-router';
-import {BrowserRouter as Router, Link} from 'react-router-dom'
+import {BrowserRouter as Router} from 'react-router-dom'
 import { ProjectScreen } from './screens/project';
 import { resetRoute } from './utils';
 

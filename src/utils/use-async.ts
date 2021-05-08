@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { useMountedRef } from "."
+import { useCallback, useState } from "react"
+import { useMountedRef } from "./index"
 
 interface State<D> {
   error: Error | null;
@@ -24,26 +24,29 @@ export const useAsync = <D>(initialState?: State<D>) => {
   // 或者使用useRef
   const [retry, setRetry] = useState(() => () => {});
 
-  const setData = (data: D) => setState({
+  const setData = useCallback((data: D) => setState({
     data, 
     stat: 'success',
     error: null
-  });
+  }), []);
 
-  const setError = (error: Error) => setState({
+  const setError = useCallback((error: Error) => setState({
     error,
     stat: 'error',
     data: null
-  })
+  }), [])
 
-  const run = (promise: Promise<D>, runConfig?: {retry: () => Promise<D>}) => {
+  const run = useCallback((
+    promise: Promise<D>,
+    runConfig?: {retry: () => Promise<D>}
+  ) => {
     if(!promise || !promise.then) {
       throw new Error('请传入Promise类型数据')
     }
     if(runConfig?.retry) {
       setRetry(() => () => run(runConfig.retry(), runConfig))
     }
-    setState({...state, stat: 'loading'});
+    setState(prevState => ({...prevState, stat: 'loading'}));
     return promise.then(data => {
       if(mountedRef.current) {
         setData(data)
@@ -54,7 +57,8 @@ export const useAsync = <D>(initialState?: State<D>) => {
       setError(error);
       return Promise.reject(error);
     })
-  }
+  }, [mountedRef, setData, setError])
+   
 
   // const retry = () => {
   //   run(oldPromise);
