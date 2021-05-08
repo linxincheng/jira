@@ -13,20 +13,22 @@ export const ProjectListScreen = () => {
 
   // 基本类型，可以放到依赖里；组件状态，可以放到依赖里；非组件状态的对象，绝不可以放到依赖里
   const [param, setParam] = useProjectSearchParams()
-  const {isLoading, error, data: list} = useProjects(useDebounce(param, 200));
+  const {isLoading, error, data: list, retry} = useProjects(useDebounce(param, 200));
   const {data:users} = useUsers();
 
   const test = useUrlQueryParam(['name'])
-  
+  console.log(retry);
+
   return <Container>
     {/* <Test/> */}
     {/* <Helmet>
       <title>项目列表</title>
     </Helmet> */}
     <h1>项目列表</h1>
+    {/* <button onClick={retry}>retry</button> */}
     <SearchPanel param={param} setParam={setParam} users={users || []}/>
     {error? <Typography.Text type={'danger'}>{error.message}</Typography.Text>:null}
-    <List users={users || []} dataSource={list || []} loading={isLoading}/>
+    <List refresh={retry} users={users || []} dataSource={list || []} loading={isLoading}/>
   </Container>
 }
 

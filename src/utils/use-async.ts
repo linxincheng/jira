@@ -18,6 +18,9 @@ export const useAsync = <D>(initialState?: State<D>) => {
     ...initialState
   })
 
+  // 或者使用useRef
+  const [retry, setRetry] = useState(() => () => {});
+
   const setData = (data: D) => setState({
     data, 
     stat: 'success',
@@ -30,9 +33,12 @@ export const useAsync = <D>(initialState?: State<D>) => {
     data: null
   })
 
-  const run = (promise: Promise<D>) => {
+  const run = (promise: Promise<D>, runConfig?: {retry: () => Promise<D>}) => {
     if(!promise || !promise.then) {
       throw new Error('请传入Promise类型数据')
+    }
+    if(runConfig?.retry) {
+      setRetry(() => () => run(runConfig.retry(), runConfig))
     }
     setState({...state, stat: 'loading'});
     return promise.then(data => {
@@ -45,6 +51,10 @@ export const useAsync = <D>(initialState?: State<D>) => {
     })
   }
 
+  // const retry = () => {
+  //   run(oldPromise);
+  // }
+
   return {
     isIdle: state.stat === 'idle',
     isLoading: state.stat === 'loading',
@@ -53,6 +63,8 @@ export const useAsync = <D>(initialState?: State<D>) => {
     run, 
     setData,
     setError,
-    ...state
+    ...state,
+    // retry 被调用时，重新跑一遍run
+    retry,
   }
 }

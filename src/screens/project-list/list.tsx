@@ -4,6 +4,8 @@ import React from 'react';
 import {IUser} from './search-panel'
 // react-router 和 react-router-dom的关系， 类似于react和react-dom/react-native/react-vr ...的关系，
 import { Link } from 'react-router-dom';
+import { Pin } from '../../components/pin';
+import { useEditProject } from '../../utils/project';
 
 // TODO 把所有ID改成number
 export interface IProject {
@@ -16,13 +18,22 @@ export interface IProject {
 }
 interface IListProps extends TableProps<IProject>{
   users: IUser[];
+  refresh?: () => void,
 }
 
 export const List = ({users, ...props}: IListProps) => {
+  const {mutate} = useEditProject();
+  const pinProject = (id: number) => (pin: boolean) => mutate({id, pin}).then(props.refresh); // 函数柯里化
   return <Table 
     pagination={false}
     rowKey={project => project.id}
     columns={[
+      {
+        title: <Pin checked={true} disabled={true} />,
+        render(value, project) {
+          return <Pin checked={project.pin} onCheckedChange={pinProject(project.id)}/>
+        }
+      },
       {
         title: '名称',
         // dataIndex: 'name',
