@@ -20,6 +20,8 @@ interface ISearchPanelProps {
   setParam: (param: ISearchPanelProps['param']) => void;
 }
 export const SearchPanel = ({param, setParam, users}: ISearchPanelProps) => {
+  console.log(users);
+  console.log(param);
   return (
     <Form css={{marginBottom: '2rem'}} layout={"inline"}>
       <Form.Item name="name">
@@ -37,15 +39,16 @@ export const SearchPanel = ({param, setParam, users}: ISearchPanelProps) => {
       <Form.Item name="personId">
         <Select 
           value={param.personId}
+          defaultValue=""
           onChange={value => setParam({
             ...param,
             personId: value
           })
         }>
-          <Select.Option value={''}>负责人</Select.Option>
+          <Select.Option key={""} value={""}>负责人</Select.Option>
           {
-            users.map((user) => (
-              <Select.Option key={user.id} value={user.id}>
+            users.map((user: IUser) => (
+              <Select.Option key={user.id} value={String(user.id)}>
                 {user.name}
               </Select.Option>
             ))
@@ -55,3 +58,4 @@ export const SearchPanel = ({param, setParam, users}: ISearchPanelProps) => {
     </Form>
   )
 }
+        // value={param.personId}
