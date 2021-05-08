@@ -1,9 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react';
 import { Form, Input, Select } from 'antd';
+import { IProject } from './list';
+import {UserSelect} from '../../components/user-select';
 
 export interface IUser {
-  id: string;
+  id: number;
   name: string;
   email:string;
   title:string;
@@ -12,16 +14,11 @@ export interface IUser {
 }
 
 interface ISearchPanelProps {
-  users: IUser[],
-  param: {
-    name: string,
-    personId: string
-  },
+  users: IUser[];
+  param: Partial<Pick<IProject, 'name' | 'personId'>>;
   setParam: (param: ISearchPanelProps['param']) => void;
 }
 export const SearchPanel = ({param, setParam, users}: ISearchPanelProps) => {
-  console.log(users);
-  console.log(param);
   return (
     <Form css={{marginBottom: '2rem'}} layout={"inline"}>
       <Form.Item name="name">
@@ -36,26 +33,14 @@ export const SearchPanel = ({param, setParam, users}: ISearchPanelProps) => {
 
         />
       </Form.Item>
-      <Form.Item name="personId">
-        <Select 
-          value={param.personId}
-          defaultValue=""
-          onChange={value => setParam({
-            ...param,
-            personId: value
-          })
-        }>
-          <Select.Option key={""} value={""}>负责人</Select.Option>
-          {
-            users.map((user: IUser) => (
-              <Select.Option key={user.id} value={String(user.id)}>
-                {user.name}
-              </Select.Option>
-            ))
-          }
-        </Select>
-      </Form.Item>
+      <UserSelect
+        value={param.personId} // 这个personId是 3
+        defaultOptionName={'负责人'}
+        onChange={(value: number | undefined) => setParam({
+          ...param,
+          personId: value
+        })}
+      />
     </Form>
   )
 }
-        // value={param.personId}

@@ -7,9 +7,9 @@ import { Link } from 'react-router-dom';
 
 // TODO 把所有ID改成number
 export interface IProject {
-  id:string;
+  id:number;
   name:string;
-  personId: string;
+  personId: number;
   pin: boolean;
   organization:string;
   created: number;

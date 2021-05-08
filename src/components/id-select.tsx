@@ -1,14 +1,15 @@
-import { Select } from 'antd';
 import React from 'react'
+import { Select } from 'antd';
 import { Raw } from '../types'
 
-type SelectProps = React.Component<typeof Select>
+type SelectProps = React.ComponentProps<typeof Select>
 
+// interface IdSelectProps extends Omit<SelectProps, 'value' | 'onChange' | 'defaultOptionName' | 'options'> {
 interface IdSelectProps extends Omit<SelectProps, 'value' | 'onChange' | 'defaultOptionName' | 'options'> {
-  value: Raw | undefined,
-  onChange: (value?: number) => void,
-  defaultOptionName?: string,
-  options?:{name:string, id:number}[]
+  value: Raw | undefined | null;
+  onChange: (value?: number) => void;
+  defaultOptionName?: string;
+  options?:{name:string, id:number}[];
 }
 
 /**
@@ -19,9 +20,8 @@ interface IdSelectProps extends Omit<SelectProps, 'value' | 'onChange' | 'defaul
  */
 export const IdSelect = (props: IdSelectProps) => {
   const {value, onChange, defaultOptionName, options, ...restProps} = props;
-
   return <Select
-    value={value}
+    value={options?.length ? toNumber(value) : 0}
     onChange={value => onChange(toNumber(value) || undefined)}
     {...restProps}
   >
@@ -29,7 +29,7 @@ export const IdSelect = (props: IdSelectProps) => {
       defaultOptionName ? <Select.Option value={0}>{defaultOptionName}</Select.Option> : null
     }
     {
-      options?.map(option => <Select.Option value={option.id}>{option.name}</Select.Option>)
+      options?.map(option => <Select.Option value={option.id} key={option.id}>{option.name}</Select.Option>)
     }
   </Select>
 }
