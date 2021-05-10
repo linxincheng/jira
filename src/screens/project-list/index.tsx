@@ -9,7 +9,7 @@ import { useUsers } from '../../utils/user'
 // import { useUrlQueryParam } from '../../utils/url'
 import { useProjectSearchParams } from './util'
 import {Row} from './../../components/lib'
-export const ProjectListScreen = (props: {setProjectModalOpen: (isOpen: boolean) => void}) => {
+export const ProjectListScreen = (props: {projectButton: JSX.Element}) => {
   useDocumentTitle('项目列表', false);
 
   // 基本类型，可以放到依赖里；组件状态，可以放到依赖里；非组件状态的对象，绝不可以放到依赖里
@@ -23,7 +23,8 @@ export const ProjectListScreen = (props: {setProjectModalOpen: (isOpen: boolean)
   return <Container>
     <Row between={true}>
       <h1>项目列表</h1>
-      <Button onClick={() => props.setProjectModalOpen(true)}>创建项目</Button>
+      {/* <Button onClick={() => props.setProjectModalOpen(true)}>创建项目</Button> */}
+      {props.projectButton}
     </Row>
     {/* <Test/> */}
     {/* <Helmet>
@@ -33,7 +34,8 @@ export const ProjectListScreen = (props: {setProjectModalOpen: (isOpen: boolean)
     <SearchPanel param={param} setParam={setParam} users={users || []}/>
     {error? <Typography.Text type={'danger'}>{error.message}</Typography.Text>:null}
     <List 
-      setProjectModalOpen={props.setProjectModalOpen}
+      // setProjectModalOpen={props.setProjectModalOpen}
+      projectButton={props.projectButton}
       refresh={retry} 
       users={users || []}
       dataSource={list || []}

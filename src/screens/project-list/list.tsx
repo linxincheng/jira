@@ -20,7 +20,8 @@ export interface IProject {
 interface IListProps extends TableProps<IProject>{
   users: IUser[];
   refresh?: () => void;
-  setProjectModalOpen: (isOpen: boolean) => void
+  // setProjectModalOpen: (isOpen: boolean) => void
+  projectButton: JSX.Element
 }
 
 export const List = ({users, ...props}: IListProps) => {
@@ -72,7 +73,8 @@ export const List = ({users, ...props}: IListProps) => {
         render(value, project) {
           return <Dropdown overlay={<Menu>
             <Menu.Item key={'edit'}>
-              <ButtonNoPadding type={'link'} onClick={() => props.setProjectModalOpen(true)}>编辑</ButtonNoPadding>
+              {/* <ButtonNoPadding type={'link'} onClick={() => props.setProjectModalOpen(true)}>编辑</ButtonNoPadding> */}
+              {props.projectButton}
             </Menu.Item>
           </Menu>}>
             <ButtonNoPadding type={'link'}>...</ButtonNoPadding>
