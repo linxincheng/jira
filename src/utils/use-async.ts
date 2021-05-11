@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react"
+import { useCallback, useReducer, useState } from "react"
 import { useMountedRef } from "./index"
 
 interface State<D> {
@@ -13,28 +13,46 @@ const defaultInitialState:State<null> = {
   error: null
 }
 
-export const useAsync = <D>(initialState?: State<D>) => {
-  const [state, setState] = useState<State<D>>({
-    ...defaultInitialState,
-    ...initialState
-  })
+const defaultConfig = {
+  throwOnError: false
+}
 
+const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
   const mountedRef = useMountedRef();
+
+  return useCallback((...args: T[]) => (mountedRef.current ? dispatch(...args): void 0), [dispatch, mountedRef])
+}
+
+// TODO 用reducer改造
+export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defaultConfig) => {
+  const config = {...defaultConfig, ...initialConfig};
+  const [state, dispatch] = useReducer(
+    (
+      state: State<D>,
+      action: Partial<State<D>>) => ({...state, ...action}
+    ), 
+    {
+      ...defaultInitialState,
+      ...initialState
+    }
+  )
+
+  const safeDispatch = useSafeDispatch(dispatch);
 
   // 或者使用useRef
   const [retry, setRetry] = useState(() => () => {});
 
-  const setData = useCallback((data: D) => setState({
+  const setData = useCallback((data: D) => safeDispatch({
     data, 
     stat: 'success',
     error: null
-  }), []);
+  }), [safeDispatch]);
 
-  const setError = useCallback((error: Error) => setState({
+  const setError = useCallback((error: Error) => safeDispatch({
     error,
     stat: 'error',
     data: null
-  }), [])
+  }), [safeDispatch])
 
   const run = useCallback((
     promise: Promise<D>,
@@ -46,23 +64,17 @@ export const useAsync = <D>(initialState?: State<D>) => {
     if(runConfig?.retry) {
       setRetry(() => () => run(runConfig.retry(), runConfig))
     }
-    setState(prevState => ({...prevState, stat: 'loading'}));
+    safeDispatch({stat: 'loading'});
     return promise.then(data => {
-      if(mountedRef.current) {
-        setData(data)
-        return data;
-      }
+      setData(data)
+      return data;
     }).catch(error => {
       // catch 会消化异常，如果不主动抛出，外面是接收不到异常的
       setError(error);
-      return Promise.reject(error);
+      if(config.throwOnError) return Promise.reject(error)
+      return error;
     })
-  }, [mountedRef, setData, setError])
-   
-
-  // const retry = () => {
-  //   run(oldPromise);
-  // }
+  }, [config.throwOnError, setData, setError, safeDispatch])
 
   return {
     isIdle: state.stat === 'idle',

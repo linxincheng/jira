@@ -5,7 +5,7 @@ import { useProjects } from '../utils/project'
 import { ButtonNoPadding } from './lib';
 
 export const ProjectPopover = (props: {setProjectModalOpen: (isOpen: boolean) => void}) => {
-  const {data: project, isLoading} = useProjects();
+  const {data: project} = useProjects();
   const pinnedProject = project?.filter(project => project.pin);
   const content = <ContentContainer>
     <Typography.Text type={'secondary'}>收藏项目</Typography.Text>

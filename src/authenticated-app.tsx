@@ -11,7 +11,7 @@ import {BrowserRouter as Router} from 'react-router-dom'
 import { ProjectScreen } from './screens/project';
 import { resetRoute } from './utils';
 import { ProjectModel } from './screens/project-list/project-model';
-import { ProjectPopover } from './components/project-popover';
+// import { ProjectPopover } from './components/project-popover';
 
 /**
  * grid 和 flex 各自的应用场景
