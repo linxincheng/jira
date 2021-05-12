@@ -22,6 +22,3 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
     }
   ] as const
 }
-
-// const a0 = ['jack', 12, {gender: 'male'}] as const
-// const a1 = ['12'] as const

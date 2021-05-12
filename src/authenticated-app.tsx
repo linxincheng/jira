@@ -1,6 +1,6 @@
 /**@jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
-import React, { useState } from 'react';
+import React from 'react';
 import { ButtonNoPadding, Row } from './components/lib';
 import { useAuth } from './context/auth-context';
 import { ProjectListScreen } from './screens/project-list';
@@ -11,7 +11,7 @@ import {BrowserRouter as Router} from 'react-router-dom'
 import { ProjectScreen } from './screens/project';
 import { resetRoute } from './utils';
 import { ProjectModel } from './screens/project-list/project-model';
-// import { ProjectPopover } from './components/project-popover';
+import { ProjectPopover } from './components/project-popover';
 
 /**
  * grid 和 flex 各自的应用场景
@@ -25,41 +25,35 @@ import { ProjectModel } from './screens/project-list/project-model';
 // prop drilling
 
 export const AuthenticatedApp = () => {
-  const [projectModalOpen, setProjectModalOpen] = useState(false)
-  return <Container>
-    <Nav>nav</Nav>
-    <PageHeader projectButton={
-        <ButtonNoPadding onClick={() => setProjectModalOpen(true)} type={'link'}>创建项目</ButtonNoPadding>
-      }
-    />
-    <ButtonNoPadding type={'link'} onClick={() => setProjectModalOpen(true)}>打开</ButtonNoPadding>
-    <Main>
-      {/* <ProjectListScreen /> */}
+  return (
+    <Container>
       <Router>
-        <Routes>
-          <Route path={'/projects'} element={<ProjectListScreen projectButton={
-        <ButtonNoPadding onClick={() => setProjectModalOpen(true)} type={'link'}>创建项目</ButtonNoPadding>
-      }/>}>
-          </Route>
-          <Route path={'/projects/:projectId/*'} element={<ProjectScreen />}></Route>
-          <Navigate to={window.location.pathname + '/projects'}/>
-        </Routes>
+        <Nav>nav</Nav>
+        <PageHeader/>
+        <Main>
+          {/* <ProjectListScreen /> */}
+            <Routes>
+              <Route path={'/projects'} element={<ProjectListScreen />}>
+              </Route>
+              <Route path={'/projects/:projectId/*'} element={<ProjectScreen />}></Route>
+              <Navigate to={window.location.pathname + '/projects'}/>
+            </Routes>
+        </Main>
+        <ProjectModel/>
+        <Aside>aside</Aside>
+        <Footer>footer</Footer>
       </Router>
-    </Main>
-    <ProjectModel projectModalOpen={projectModalOpen} onClose={() => setProjectModalOpen(false)}/>
-    <Aside>aside</Aside>
-    <Footer>footer</Footer>
-  </Container>
+    </Container>
+  )
 }
 
-const PageHeader = (props: {projectButton: JSX.Element}) => {
+const PageHeader = () => {
   return <Header between={true}>
   <HeaderLeft gap={true}>
     <Button type={'link'} onClick={resetRoute}>
       <Logo css={{height: '30px'}}></Logo>
     </Button>
-    {/* <ProjectPopover setProjectModalOpen={props.setProjectModalOpen}/> */}
-    {props.projectButton}
+    <ProjectPopover />
     <span>用户</span>
     <HeaderItem as={'div'}>another</HeaderItem>
   </HeaderLeft>
@@ -74,7 +68,6 @@ const User = () => {
   return <Dropdown overlay={
     <Menu>
       <Menu.Item key={'logout'}>
-        {/* <a onClick={logout}>登出</a> */}
         <Button type={'link'} onClick={logout}>登出</Button>
       </Menu.Item>
     </Menu>}>
